@@ -101,7 +101,11 @@
                     }
                 }
 
-                board.querySelector('div[data-idx="' + t.answerIdx + '"]').innerHTML = example[t.exampleIdx][0];
+                console.log(example[t.exampleIdx][0]);
+                console.log(example[t.exampleIdx]);
+                console.log(example);
+
+                board.querySelector('div[data-idx="' + t.answerIdx + '"]').innerHTML = example[t.exampleIdx][2];
 
 
             }
