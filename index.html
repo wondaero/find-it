@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>한양에서 김서방 찾기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="./assets/css/normalize.css">
+</head>
+<style>
+    @font-face {
+        font-family: 'UhBeeDongKyung';  /*어비동경체*/
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeeDongKyung.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    /* body{opacity:.03;} */
+
+    .cf:after{content: ''; display: block; clear: both;}
+
+    header{position: fixed; top: 0; left: 0; right: 0; background: lightpink; display: flex; align-items: center; justify-content: space-between;}
+    header{padding: 5px; text-align: right;}
+    header button{outline: 0; border: 0; border-radius: 3px; width: 60px; padding: 5px; box-sizing: border-box; color: #fff; font-weight: 900;}
+    .init{background: red;}
+    .start{background: blue;}
+
+
+    .board{padding-top: 40px; width: 5000px;}
+    .board > div{
+        float: left; width: 50px; height: 50px; box-sizing: border-box;
+        line-height: 50px; text-align: center; box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
+    }
+    .board > div.on{background: #000; color: #fff;}
+
+
+
+
+
+</style>
+<body>
+    <header>
+        <div id="guide">시작버튼을 눌러주세요.</div>
+        <div>
+            <button class="init" onclick="findd.init();">초기화</button>
+            <button class="start" onclick="findd.gameStart();">시작</button>
+        </div>
+    </header>
+    <div id="board" class="board cf">
+    </div>
+
+
+
+    <script>
+
+        const qs = function(t){return document.querySelector(t);}
+        const qsa = function(t){return document.querySelectorAll(t);}
+        const board = qs('#board');
+        const guide = qs('#guide');
+
+        const example = [
+            {1: '1', 2: '7'},
+            {1: 3, 2: 8},
+            {1: '!', 2: 'i'},
+            {1: 'q', 2: 'g'},
+            {1: 'o', 2: '0'},
+            {1: 'm', 2: 'n'},
+            {1: 'w', 2: 'v'},
+            {1: 'z', 2: '2'},
+        ];
+
+
+        const findd = new FindText();
+
+        function FindText(){
+            const t = this;
+            t.xCnt = 100;
+            t.yCnt = 100;
+            t.start = false;
+            t.end = false;
+
+            t.exampleIdx = 0;
+            t.answerIdx = 0;
+
+            t.gameStart = function(){
+                if(t.start !== false) return;
+
+                t.initValue();
+
+                t.start = new Date().getTime();
+                guide.innerText = '다른 것을 찾아주세요.';
+
+                t.exampleIdx = getRandomNum(0, (example.length - 1));
+                t.answerIdx = getRandomNum(0, ((t.xCnt * t.yCnt) - 1));
+
+                for(let i = 0; i < t.xCnt; i++){
+                    for(let j = 0; j < t.yCnt; j++){
+                        const div = document.createElement('div');
+                        div.innerHTML = example[t.exampleIdx][1];
+                        div.dataset.idx = (i * t.xCnt) + j;
+                        board.append(div);
+                    }
+                }
+            }
+
+            t.answer = function(idx){
+                if(t.answerIdx == idx){
+                    t.end = new Date().getTime();
+                    alert(((t.end - t.start) / 1000) + '초만에 찾으셨습니다.\n' + (t.answerIdx + 1) + '번째에 있었네요...');
+                }else{
+                    alert('틀렸습니다.');
+                    board.querySelector('div[data-idx="' + t.answerIdx + '"]').classList.add('on');
+                }
+                t.start = false;
+            }
+
+            t.init = function(){
+                if(confirm('초기화 할까요?')) location.reload();
+            }
+
+            t.initValue = function(){
+                t.xCnt = 100;
+                t.yCnt = 100;
+                t.start = false;
+                t.exampleIdx = 0;
+                t.answerIdx = 0;
+
+                guide.innerText = '시작버튼을 눌러주세요.';
+            }
+        }
+
+        function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
+
+        board.addEventListener('click', function(e){
+            findd.answer(e.target.dataset.idx);
+        });
+    </script>
+</body>
+</html>
