@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>한양에서 김서방 찾기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="./assets/css/normalize.css">
+</head>
+<style>
+    @font-face {
+        font-family: 'UhBeeDongKyung';  /*어비동경체*/
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeeDongKyung.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    /* body{opacity:.03;} */
+
+    .cf:after{content: ''; display: block; clear: both;}
+
+    header{position: fixed; top: 0; left: 0; right: 0; background: lightpink; display: flex; align-items: center; justify-content: space-between; z-index: 2;}
+    header{padding: 5px; text-align: right;}
+    header button{outline: 0; border: 0; border-radius: 3px; width: 60px; padding: 5px; box-sizing: border-box; color: #fff; font-weight: 900;}
+    .init{background: red;}
+    .start{background: blue;}
+
+
+    .board{padding-top: 40px; width: 2500px;}
+    .board > div{
+        float: left; width: 50px; height: 50px; box-sizing: border-box;
+        line-height: 50px; text-align: center; box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
+    }
+    .board > div.on{background: #000; color: #fff;}
+
+
+    /*person*/
+    .person{position: relative; display: flex; flex-direction: column; align-items: center; width: 50px; height: 50px; padding-top: 5px;}
+    .person:after{
+        content: ''; display: block; width: 100%; height: 100%;  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 2; box-sizing: border-box;
+    }
+    .person div{box-sizing: border-box;}
+    .person .head{width: 20px; height: 20px; border-radius: 50%; background: #ffd8a7; z-index: 1;}
+    .person .body{width: 30px; height: 30px; border-radius: 30px 30px 0 0; background: #ffd8a7; top: -5px; position: relative;}
+
+    .person .cloth{width: 30px; height: 30px; border-radius: 30px 30px 0 0; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); z-index: 0;}
+    .person .cloth.c1{background: rgb(78, 1, 1);}
+    .person .cloth.c2{background: linear-gradient(to right, #eee 50%, skyblue 0); background-size: 4px;}
+    .person .cloth.c3{background: navy;}
+    .person .cloth.c4{background: rgb(70, 20, 20); display: flex; align-items: center; justify-content: center;}
+    .person .cloth.c4:after{content: ''; width: 10px; height: 100%; display: block; background: #eee;}
+
+    .person .hat{
+        width: 20px; height: 10px; border-radius: 20px 20px 0 0;
+        position: absolute; top: 3px; left: 50%; margin-left: -10px; z-index: 1;
+    }
+    .person .hat.h1{background: #db934c;}
+    .person .hat.h1:after{
+        content: ''; display: block; position: absolute; bottom: 0; left: -5px; width: 30px; height: 2px; background: #db934c; border-radius: 50%;
+    }
+    .person .hat.h2, .person .hat.h3{background: blue;}
+    .person .hat.h2:after, .person .hat.h3:after{
+        content: ''; display: block; position: absolute; bottom: 0; width: 25px; height: 2px; background: blue; border-radius: 50%;
+    }
+    .person .hat.h2:after{left: 0;}
+    .person .hat.h3:after{right: 0;}
+    .person .hat.h4{background: #000; border-radius: 0;}
+    .person .hat.h4:after, .person .hat.h5:after{
+        content: ''; display: block; position: absolute; bottom: 0; left: -5px; width: 30px; height: 2px; background: #000; border-radius: 50%;
+    }
+    .person .hat.h5{background: #000;}
+    .person .hat.h6{background: rgb(230, 195, 0); border-bottom: 2px dashed #000;}
+    .person .hat.h7{background: rgb(230, 195, 0);}
+
+
+    .person .glass{position: absolute; top: 15px; left: 50%; width: 20px; margin-left: -10px; z-index: 1;}
+    .person .glass:before, .person .glass:after{
+        content: ''; display: block; position: absolute; top: 0; width: 9px; height: 5px; background: #000; border-radius: 0 0 10px 10px;
+        background: linear-gradient(135deg, rgba(0, 0, 0, .5) 50%, black 0); box-sizing: border-box;
+    }
+    .person .glass:before{left: 1px;}
+    .person .glass:after{right: 1px;}
+    .person .glass.g1:before, .person .glass.g1:after{border: 1px solid rgba(0,0,0,.5);}
+    .person .glass.g2:before, .person .glass.g2:after{border: 1px solid #f00;}
+    .person .glass.g3:before, .person .glass.g3:after{border: 1px solid #0f0;}
+    .person .glass.g4:before, .person .glass.g4:after{border: 1px solid #00f;}
+    .person .glass.g5:before, .person .glass.g5:after{border: 1px solid #fff;}
+    .person .glass.g6:before, .person .glass.g6:after{
+        background: linear-gradient(135deg, rgba(255, 255, 255, .5) 50%, #fff 0);
+        border: 1px solid rgba(0,0,0,.5); border-radius: 0;
+    }
+
+    .person .tie{position: absolute; z-index: 1; top: 25px;}
+    .person .tie.t1, .person .tie.t2{width: 10px; height: 6px; border-top: 3px solid transparent; border-bottom: 3px solid transparent;}
+    .person .tie.t1{border-left: 5px solid #f00; border-right: 5px solid #f00;}
+    .person .tie.t2{border-left: 5px solid #000; border-right: 5px solid #000;}
+    .person .tie.t3, .person .tie.t4, .person .tie.t5, .person .tie.t6{
+        width: 8px; height: 4px; border-radius: 0 0 5px 5px; box-shadow: inset 0 0 1px rgba(255, 255, 255, .5);
+    }
+    .person .tie.t3:before, .person .tie.t4:before, .person .tie.t5:before, .person .tie.t6:before{
+        content: ''; width: 2px; height: 15px; display: block; left: 50%; margin-left: -1px;
+        position: absolute; top: 4px; border-radius: 0 0 1px 1px;
+    }
+
+    .person .tie.t3, .person .tie.t3:before{background: blue;}
+    .person .tie.t4, .person .tie.t4:before{background: yellow;}
+    .person .tie.t5, .person .tie.t5:before{background: green;}
+    .person .tie.t6, .person .tie.t6:before{background: linear-gradient(to bottom, #000, #eee);}
+
+    .person > div.none{display: none!important;}
+
+    /*person*/
+
+
+
+</style>
+<body>
+    <header>
+        <div id="guide">시작버튼을 눌러주세요.</div>
+        <div>
+            <button class="init" onclick="findd.init();">초기화</button>
+            <button class="start" onclick="findd.gameStart();">시작</button>
+        </div>
+    </header>
+    <div id="board" class="board cf">
+    </div>
+    <!-- <div class="person mr-kim">
+        <div class="head"></div>
+        <div class="body"></div>
+        
+        <div class="hat h1"></div>
+        <div class="cloth c1"></div>
+        <div class="glass g1"></div>
+        <div class="tie t6"></div>
+    </div> -->
+
+
+
+    <script>
+
+        const qs = function(t){return document.querySelector(t);}
+        const qsa = function(t){return document.querySelectorAll(t);}
+        const board = qs('#board');
+        const guide = qs('#guide');
+
+
+
+        const findd = new FindText();
+
+        const style1 = {
+            hat: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'none'],
+            cloth: ['c1', 'c2', 'c3', 'c4', 'c5'],
+            glass: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'none'],
+            tie: ['t1', 't2', 't3', 't4', 't5', 't6', 'none']
+        }
+
+        function FindText(){
+            const t = this;
+            t.xCnt = 50;
+            t.yCnt = 50;
+            t.start = false;
+            t.end = false;
+
+            t.kimIdx = 0;
+            t.kimStyle = 0;
+
+            t.gameStart = function(){
+                if(t.start !== false) return;
+
+                t.initValue();
+
+                t.start = new Date().getTime();
+                guide.innerText = '김서방을 찾아주세요.';
+
+                t.kimIdx = getRandomNum(0, ((t.xCnt * t.yCnt) - 1));
+                t.kimStyle = getStyleCde();
+
+                for(let i = 0; i < t.xCnt; i++){
+                    for(let j = 0; j < t.yCnt; j++){
+
+                        const styleCde = getStyleCde(t.kimStyle);
+
+                        
+                        const person = document.createElement('div');
+                        person.classList.add('person');
+
+                        const head = document.createElement('div');
+                        head.classList.add('head');
+                        const body = document.createElement('div');
+                        body.classList.add('body');
+
+                        const hat = document.createElement('div');
+                        hat.classList.add('hat');
+                        hat.classList.add(style1.hat[styleCde[0]]);
+                        const cloth = document.createElement('div');
+                        cloth.classList.add('cloth');
+                        cloth.classList.add(style1.cloth[styleCde[1]]);
+                        const glass = document.createElement('div');
+                        glass.classList.add('glass');
+                        glass.classList.add(style1.glass[styleCde[2]]);
+                        const tie = document.createElement('div');
+                        tie.classList.add('tie');
+                        tie.classList.add(style1.tie[styleCde[3]]);
+
+                        person.appendChild(head);
+                        person.appendChild(body);
+                        person.appendChild(hat);
+                        person.appendChild(cloth);
+                        person.appendChild(glass);
+                        person.appendChild(tie);
+
+                        person.dataset.idx = (i * t.xCnt) + j;
+
+                        board.append(person);
+                    }
+                }
+
+                board.querySelector('div[data-idx="' + t.kimIdx + '"]').classList.add('mr-kim');
+            }
+
+            t.answer = function(idx){
+                if(t.kimIdx == idx){
+                    t.end = new Date().getTime();
+                    alert(((t.end - t.start) / 1000) + '초만에 찾으셨습니다.\n' + (t.kimIdx + 1) + '번째에 있었네요...');
+                    t.start = false;
+                }
+            }
+
+            t.init = function(){
+                if(confirm('초기화 할까요?')) location.reload();
+            }
+
+            t.initValue = function(){
+                t.xCnt = 50;
+                t.yCnt = 50;
+                t.start = false;
+                t.kimIdx = 0;
+
+                guide.innerText = '시작버튼을 눌러주세요.';
+            }
+        }
+
+        function getRandomNum(mn, mx){return Math.floor(Math.random() * (mx - mn + 1)) + mn;};
+
+        function getStyleCde(seq){
+            const a1 = getRandomNum(0, style1.hat.length - 1);
+            const b1 = getRandomNum(0, style1.cloth.length - 1);
+            const c1 = getRandomNum(0, style1.glass.length - 1);
+            const d1 = getRandomNum(0, style1.tie.length - 1);
+
+            const combi = '' + a1 + b1 + c1 + d1;
+
+            if(seq == combi) return getStyleCde(seq);
+            else return combi;
+        }
+
+        board.addEventListener('click', function(e){
+            findd.answer(e.target.dataset.idx);
+        });
+    </script>
+</body>
+</html>
