@@ -226,10 +226,14 @@
 
                 const mrKim = board.querySelector('div[data-idx="' + t.kimIdx + '"]');
 
-                mrKim.querySelector('.hat').classList.add(style1.hat[t.kimStyle[0]]);
-                mrKim.querySelector('.cloth').classList.add(style1.cloth[t.kimStyle[1]]);
-                mrKim.querySelector('.glass').classList.add(style1.glass[t.kimStyle[2]]);
-                mrKim.querySelector('.tie').classList.add(style1.tie[t.kimStyle[3]]);
+                mrKim.querySelector('.hat').setAttribute('class', 'hat ' + style1.hat[t.kimStyle[0]]);
+                mrKim.querySelector('.cloth').setAttribute('class', 'cloth ' + style1.cloth[t.kimStyle[1]]);
+                mrKim.querySelector('.glass').setAttribute('class', 'glass ' + style1.glass[t.kimStyle[2]]);
+                mrKim.querySelector('.tie').setAttribute('class', 'tie ' + style1.tie[t.kimStyle[3]]);
+                // mrKim.querySelector('.hat').classList.add(style1.hat[t.kimStyle[0]]);
+                // mrKim.querySelector('.cloth').classList.add(style1.cloth[t.kimStyle[1]]);
+                // mrKim.querySelector('.glass').classList.add(style1.glass[t.kimStyle[2]]);
+                // mrKim.querySelector('.tie').classList.add(style1.tie[t.kimStyle[3]]);
 
                 const dupNode = mrKim.cloneNode(true);
 
