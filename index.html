@@ -260,7 +260,7 @@
                     const kim2_row = parseInt(kim2 / t.xCnt);
                     const kim2_col = parseInt(kim2 % t.yCnt);
 
-                    alert(((t.end - t.start) / 1000) + '초만에 찾으셨습니다!\n' + (kim2_row + 1) + '번째 줄 ' + kim2_col + '번째 칸에 있었네요.');
+                    alert(((t.end - t.start) / 1000) + '초만에 찾으셨습니다!\n' + (kim2_row + 1) + '번째 줄 ' + (kim2_col || t.yCnt) + '번째 칸에 있었네요.');
                     t.start = false;
                 }else{
                     board.querySelector('div[data-idx="' +idx + '"]').classList.add('wrong');
